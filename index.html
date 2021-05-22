@@ -1,21 +1,45 @@
 <html>
   <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-      let socket = io('poviolabs-dashboard-socket.herokuapp.com');
+      let socket = io();
+      let channel_name = 'test-channel';
       let el;
 
-      socket.emit('room', '123');
+      socket.emit('room', channel_name);
 
       socket.on('update', (data) => {
         el = document.getElementById('placeholder');
-        el.innerHTML = 'Data received (check console): ' + data;
+        console.log(data);
+        el.innerHTML = el.innerHTML + '\n> '+ (new Date()).toISOString() +' : Data received: ' + JSON.stringify(data);
         console.log(data);
       });
+
+      function makePost() {
+        let data = document.getElementById("data-input").value;
+        let api_secret = document.getElementById("api_secret-input").value;
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/channels/"+channel_name, true);
+        xhttp.setRequestHeader("Content-type", "application/json");
+        xhttp.setRequestHeader("Authorization", api_secret);
+        xhttp.send(JSON.stringify({
+          data: data
+        }));
+      }
+
 
     </script>
   </head>
   <body>
-    <pre id="placeholder"></pre>
+    <div>
+      <input type="text" placeholder="Data" id="data-input"> <br>
+      <input type="text" placeholder="API key" id="api_secret-input" value="local"> <br>
+      <button onclick="makePost();">POST</button>
+    </div>
+    <div>
+      <h3>Received data:</h3>
+      <pre id="placeholder"></pre>
+    </div>
   </body>
 </html>
