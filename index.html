@@ -5,13 +5,17 @@
       let socket = io();
       let el;
 
-      socket.on('time', (timeString) => {
-        el = document.getElementById('server-time');
-        el.innerHTML = 'Server time: ' + timeString;
+      socket.emit('room', '123');
+
+      socket.on('update', (data) => {
+        el = document.getElementById('placeholder');
+        el.innerHTML = 'Data received (check console): ' + data;
+        console.log(data);
       });
+
     </script>
   </head>
   <body>
-    <p id="server-time"></p>
+    <pre id="placeholder"></pre>
   </body>
 </html>
