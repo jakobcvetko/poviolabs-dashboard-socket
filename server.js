@@ -14,7 +14,10 @@ app.post('/channels/:id', function(request, response) {
 
   // Security check
   if(request.headers.authorization != API_SECRET) {
-    response.writeHead(401, {'Content-Type': 'text/json'});
+    response.writeHead(401, {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'text/json'
+    });
     response.end(null);
     return;
   }
@@ -24,8 +27,8 @@ app.post('/channels/:id', function(request, response) {
 
   // Response
   response.writeHead(200, {
-    'Content-Type': 'text/json',
     'Access-Control-Allow-Origin': '*',
+    'Content-Type': 'text/json'
   });
   response.end();
 });
