@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const cors = require('cors')
 const socketIO = require('socket.io');
 
 const PORT = process.env.PORT || 3000;
@@ -8,6 +9,7 @@ const API_SECRET = process.env.API_SECRET || 'local';
 const INDEX = '/index.html';
 
 var app = express();
+app.use(cors())
 app.use(express.json());
 
 app.post('/channels/:id', function(request, response) {
