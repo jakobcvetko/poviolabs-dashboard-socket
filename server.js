@@ -38,7 +38,11 @@ const server = app.use((req, res) => res.sendFile(INDEX, { root: __dirname }))
 // Socket.io logic
 //
 
-const io = socketIO(server);
+const io = socketIO(server, {
+  cors: {
+    origin: '*',
+  }
+});
 
 io.on('connection', (socket) => {
   console.log('Client connected');
