@@ -16,10 +16,7 @@ app.post('/channels/:id', function(request, response) {
 
   // Security check
   if(request.headers.authorization != API_SECRET) {
-    response.writeHead(401, {
-      'Access-Control-Allow-Origin': '*',
-      'Content-Type': 'text/json'
-    });
+    response.writeHead(401, {'Content-Type': 'text/json'});
     response.end(null);
     return;
   }
@@ -28,10 +25,7 @@ app.post('/channels/:id', function(request, response) {
   io.to(request.params.id).emit('update', request.body)
 
   // Response
-  response.writeHead(200, {
-    'Access-Control-Allow-Origin': '*',
-    'Content-Type': 'text/json'
-  });
+  response.writeHead(200, {'Content-Type': 'text/json'});
   response.end();
 });
 
