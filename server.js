@@ -23,7 +23,10 @@ app.post('/channels/:id', function(request, response) {
   io.to(request.params.id).emit('update', request.body)
 
   // Response
-  response.writeHead(200, {'Content-Type': 'text/json'});
+  response.writeHead(200, {
+    'Content-Type': 'text/json',
+    'Access-Control-Allow-Origin': '*',
+  });
   response.end();
 });
 
