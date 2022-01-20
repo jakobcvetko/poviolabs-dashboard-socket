@@ -1,7 +1,4 @@
-POST http://localhost:3000/channels/local
+GET http://localhost:3000/channels/local/alive
 Authorization: local
 content-type: application/json
 
-{
-    "data": "garbage"
-}
