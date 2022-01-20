@@ -1,40 +1,20 @@
-'use strict';
+"use strict";
 
-const express = require('express');
-const cors = require('cors')
-const socketIO = require('socket.io');
+const express = require("express");
+const cors = require("cors");
+const socketIO = require("socket.io");
 
 const PORT = process.env.PORT || 3000;
-const API_SECRET = process.env.API_SECRET || 'local';
-const INDEX = '/index.html';
+const API_SECRET = process.env.API_SECRET || "local";
+const INDEX = "/index.html";
 
+// App start
 var app = express();
-app.use(cors())
-app.use(express.json({limit: '100mb'}));
-
-app.post('/channels/:id', function(request, response) {
-
-  // Security check
-  if(request.headers.authorization != API_SECRET) {
-    response.writeHead(401, {'Content-Type': 'text/json'});
-    response.end(null);
-    return;
-  }
-
-  // Emit to everyone who listens on this channel
-  io.to(request.params.id).emit('update', request.body)
-
-  // Response
-  response.writeHead(200, {'Content-Type': 'text/json'});
-  response.end();
-});
+app.use(cors());
+app.use(express.json({ limit: "100mb" }));
 
 // Server start
-const server = app.use((req, res) => res.sendFile(INDEX, { root: __dirname }))
-  .listen(PORT, () => console.log(`Listening on ${PORT}`));
-
-
-
+const server = app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 
 //
 // Socket.io logic
@@ -42,19 +22,41 @@ const server = app.use((req, res) => res.sendFile(INDEX, { root: __dirname }))
 
 const io = socketIO(server, {
   cors: {
-    origin: '*',
-  }
+    origin: "*",
+  },
 });
 
-io.on('connection', (socket) => {
-  console.log('Client connected');
-  socket.on('disconnect', () => console.log('Client disconnected'));
+io.on("connection", (socket) => {
+  console.log("Client connected");
+  socket.on("disconnect", () => console.log("Client disconnected"));
 });
 
-io.sockets.on('connection', function(socket) {
+io.sockets.on("connection", function (socket) {
   // once a client has connected, we expect to get a ping from them saying what room they want to join
-  socket.on('room', function(room) {
-      console.log("Client joined room", room)
-      socket.join(room);
+  socket.on("room", function (room) {
+    console.log("Client joined room", room);
+    socket.join(room);
   });
+});
+
+app.post("/channels/:id", function (request, response) {
+  // Security check
+  if (request.headers.authorization != API_SECRET) {
+    response.writeHead(401, { "Content-Type": "text/json" });
+    response.end(null);
+    return;
+  }
+  var room = io.sockets.adapter.rooms[request.params.id];
+
+  if (!room || room.length === 0) {
+    response.writeHead(422, { "Content-Type": "text/json" });
+    response.end(null);
+    return;
+  }
+  // Emit to everyone who listens on this channel
+  io.to(request.params.id).emit("update", request.body);
+
+  // Response
+  response.writeHead(200, { "Content-Type": "text/json" });
+  response.end();
 });

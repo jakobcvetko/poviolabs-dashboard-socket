@@ -1,0 +1,7 @@
+POST http://localhost:3000/channels/1231231
+Authorization: local
+content-type: application/json
+
+{
+    "data": "garbage"
+}
