@@ -3,15 +3,20 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
       let socket = io();
-      let channel_name = 'test-channel';
+      let channel_name = "test-channel";
       let el;
 
-      socket.emit('room', channel_name);
+      socket.emit("room", channel_name);
 
-      socket.on('update', (data) => {
-        el = document.getElementById('placeholder');
+      socket.on("update", (data) => {
+        el = document.getElementById("placeholder");
         console.log(data);
-        el.innerHTML = el.innerHTML + '\n> '+ (new Date()).toISOString() +' : Data received: ' + JSON.stringify(data);
+        el.innerHTML =
+          el.innerHTML +
+          "\n> " +
+          new Date().toISOString() +
+          " : Data received: " +
+          JSON.stringify(data);
         console.log(data);
       });
 
@@ -20,21 +25,27 @@
         let api_secret = document.getElementById("api_secret-input").value;
 
         var xhttp = new XMLHttpRequest();
-        xhttp.open("POST", "/channels/"+channel_name, true);
+        xhttp.open("POST", "/channels/" + channel_name, true);
         xhttp.setRequestHeader("Content-type", "application/json");
         xhttp.setRequestHeader("Authorization", api_secret);
-        xhttp.send(JSON.stringify({
-          data: data
-        }));
+        xhttp.send(
+          JSON.stringify({
+            data: data,
+          })
+        );
       }
-
-
     </script>
   </head>
   <body>
     <div>
-      <input type="text" placeholder="Data" id="data-input"> <br>
-      <input type="text" placeholder="API key" id="api_secret-input" value="local"> <br>
+      <input type="text" placeholder="Data" id="data-input" /> <br />
+      <input
+        type="text"
+        placeholder="API key"
+        id="api_secret-input"
+        value="local"
+      />
+      <br />
       <button onclick="makePost();">POST</button>
     </div>
     <div>

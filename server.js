@@ -46,8 +46,7 @@ app.post("/channels/:id", function (request, response) {
     response.end(null);
     return;
   }
-  var room = io.sockets.adapter.rooms[request.params.id];
-
+  var room = io.sockets.adapter.rooms.get(request.params.id);
   if (!room || room.length === 0) {
     response.writeHead(422, { "Content-Type": "text/json" });
     response.end(null);
