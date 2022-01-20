@@ -39,6 +39,24 @@ io.sockets.on("connection", function (socket) {
   });
 });
 
+app.get("/channels/:id/alive", function (request, response) {
+  // Security check
+  if (request.headers.authorization != API_SECRET) {
+    response.writeHead(401, { "Content-Type": "text/json" });
+    response.end(null);
+    return;
+  }
+  var room = io.sockets.adapter.rooms.get(request.params.id);
+  if (!room || room.length === 0) {
+    response.writeHead(422, { "Content-Type": "text/json" });
+    response.end(null);
+    return;
+  }
+  // Response
+  response.writeHead(204, { "Content-Type": "text/json" });
+  response.end();
+});
+
 app.post("/channels/:id", function (request, response) {
   // Security check
   if (request.headers.authorization != API_SECRET) {
