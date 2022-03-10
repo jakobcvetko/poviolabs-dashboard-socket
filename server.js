@@ -35,7 +35,7 @@ io.sockets.on("connection", function (socket) {
   // once a client has connected, we expect to get a ping from them saying what room they want to join
   socket.on("room", function (room) {
     console.log("Client joined room", room);
-    socket.join(room);
+    socket.join("" + room);
   });
 });
 
@@ -46,7 +46,7 @@ app.get("/channels/:id/alive", function (request, response) {
     response.end(null);
     return;
   }
-  var room = io.sockets.adapter.rooms.get(request.params.id);
+  var room = io.sockets.adapter.rooms.get("" + request.params.id);
   if (!room || room.length === 0) {
     response.writeHead(422, { "Content-Type": "text/json" });
     response.end(null);
@@ -65,7 +65,7 @@ app.post("/channels/:id", function (request, response) {
     response.end(null);
     return;
   }
-  var room = io.sockets.adapter.rooms.get(request.params.id);
+  var room = io.sockets.adapter.rooms.get("" + request.params.id);
   console.log(room);
   console.log(io.sockets.adapter.rooms);
   if (!room || room.length === 0) {
