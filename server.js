@@ -58,6 +58,7 @@ app.get("/channels/:id/alive", function (request, response) {
 });
 
 app.post("/channels/:id", function (request, response) {
+  console.log(`Message request room: ${request.params.id}`);
   // Security check
   if (request.headers.authorization != API_SECRET) {
     response.writeHead(401, { "Content-Type": "text/json" });
@@ -70,6 +71,7 @@ app.post("/channels/:id", function (request, response) {
     response.end(null);
     return;
   }
+  console.log(`Message sent to room: ${request.params.id}`);
   // Emit to everyone who listens on this channel
   io.to(request.params.id).emit("update", request.body);
 
