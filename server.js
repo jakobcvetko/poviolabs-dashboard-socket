@@ -66,8 +66,6 @@ app.post("/channels/:id", function (request, response) {
     return;
   }
   var room = io.sockets.adapter.rooms.get("" + request.params.id);
-  console.log(room);
-  console.log(io.sockets.adapter.rooms);
   if (!room || room.length === 0) {
     response.writeHead(422, { "Content-Type": "text/json" });
     response.end(null);
